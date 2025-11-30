@@ -24,6 +24,7 @@ public class VendaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
+    //este ? entre as tags indica que o corpo da resposta pode ser de qualquer tipo
     public ResponseEntity<?> createVenda(@RequestBody Venda venda) {
 
         //Validar cliente

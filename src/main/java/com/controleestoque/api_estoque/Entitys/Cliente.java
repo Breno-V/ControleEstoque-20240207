@@ -3,6 +3,9 @@ package com.controleestoque.api_estoque.Entitys;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "tb_clientes")
 
@@ -16,7 +19,7 @@ public class Cliente {
     private String telefone;
 
     // Relacionamento de clientes com vendas (1:N)//
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Venda> vendas;
 
     // Construtores, getters e setters
@@ -58,5 +61,15 @@ public class Cliente {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
+
+    public List<Venda> getVendas() {
+        return vendas;
+    }
+
+    public void setVendas(List<Venda> vendas) {
+        this.vendas = vendas;
+    }
+
+    
 
 }
