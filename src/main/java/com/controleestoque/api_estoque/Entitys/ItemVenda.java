@@ -1,8 +1,10 @@
 package com.controleestoque.api_estoque.Entitys;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 @Entity
-@Table(name = "tb_itens_venda")
+@Table(name = "tb_item_venda")
 public class ItemVenda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +19,7 @@ public class ItemVenda {
     private Produto produto;
 
     private Integer quantidade;
-    private Double precoUnitario;
+    private BigDecimal precoUnitario;
 
     //Getters e Setters
     public Long getId() {
@@ -44,10 +46,10 @@ public class ItemVenda {
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
-    public Double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
-    public void setPrecoUnitario(Double precoUnitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 

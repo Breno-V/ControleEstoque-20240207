@@ -63,7 +63,12 @@ public class ProdutoController {
             });
         }
 
-        //3. Salva o produto (e o estoque, se o CASCADE estiver configurado)
+        // 3. Gerenciamento do Estoque (1:1)
+        if (produto.getEstoque() != null) {
+            produto.getEstoque().setProduto(produto); // seta o produto no estoque
+        }
+
+        //4. Salva o produto
         Produto savedProduto = produtoRepository.save(produto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduto);

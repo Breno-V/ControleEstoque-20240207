@@ -64,6 +64,14 @@ public class Venda {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
-    }   
+    }
+
+    public List<ItemVenda> getItens() {
+        return itensVenda;
+    }
+    
+    public void setItens(List<ItemVenda> itensVenda) {
+        this.itensVenda = itensVenda;
+    }
 
 }
