@@ -3,6 +3,9 @@ package com.controleestoque.api_estoque.Entitys;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -22,6 +25,7 @@ public class Produto {
     //'mappedBy' indica que a chave estrangeira está na classe Estoque.
     //Cascade.ALL: Operações (como salvar) em Produto afetam Estoque
     @OneToOne(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Estoque estoque;
 
     //Relacionamento N:1 (muitos-para-um)//
@@ -29,6 +33,7 @@ public class Produto {
     //É o lado 'N' (Muitos) que contém a chave estrangeira (FK)
     @ManyToOne(fetch = FetchType.LAZY) //LAZY: Carrega  acategoria apenas quando for solicitada
     @JoinColumn(name = "categoria_id", nullable = false) //define a FK na tabela 'tb_produtos'
+    @JsonBackReference
     private Categoria categoria;
 
     //Relacionamento N:M (Muito-para-Muito)//

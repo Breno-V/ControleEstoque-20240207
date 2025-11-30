@@ -1,5 +1,7 @@
 package com.controleestoque.api_estoque.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +19,7 @@ public class Estoque {
     // E o lado 'proprietário' que contém a chave estrangeira (FK)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_id", nullable = false) // Define a FK na tabela 'tb_estoques'
+    @JsonBackReference
     private Produto produto;
 
     // Construtores, getters e setters

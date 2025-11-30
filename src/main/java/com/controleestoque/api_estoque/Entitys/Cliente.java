@@ -3,6 +3,8 @@ package com.controleestoque.api_estoque.Entitys;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "tb_clientes")
 
@@ -17,6 +19,7 @@ public class Cliente {
 
     // Relacionamento de clientes com vendas (1:N)//
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Venda> vendas;
 
     // Construtores, getters e setters

@@ -2,6 +2,8 @@ package com.controleestoque.api_estoque.Entitys;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "tb_item_venda")
@@ -12,6 +14,7 @@ public class ItemVenda {
     
     @ManyToOne
     @JoinColumn(name = "venda_id")
+    @JsonBackReference
     private Venda venda;
 
     @ManyToOne
