@@ -2,7 +2,6 @@ package com.controleestoque.api_estoque.Entitys;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,7 +18,7 @@ public class Venda {
     private Cliente cliente;
 
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemVenda> itens;
+    
 
     private LocalDateTime dataVenda;
     private BigDecimal valorTotal;
@@ -27,9 +26,8 @@ public class Venda {
     public Venda() {
     }
 
-    public Venda(Cliente cliente, List<ItemVenda> itens, LocalDateTime dataVenda, BigDecimal valorTotal) {
+    public Venda(Cliente cliente, LocalDateTime dataVenda, BigDecimal valorTotal) {
         this.cliente = cliente;
-        this.itens = itens;
         this.dataVenda = dataVenda;
         this.valorTotal = valorTotal;
     }
@@ -64,16 +62,6 @@ public class Venda {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
-    }
-
-    public List<ItemVenda> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<ItemVenda> itens) {
-        this.itens = itens;
     }   
-
-    
 
 }
