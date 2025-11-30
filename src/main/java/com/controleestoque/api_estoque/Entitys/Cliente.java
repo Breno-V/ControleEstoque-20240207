@@ -22,10 +22,9 @@ public class Cliente {
     // Construtores, getters e setters
     public Cliente() {}
 
-    public Cliente(String nome, String email, List<Venda> vendas) {
+    public Cliente(String nome, String email) {
             this.nome = nome;
             this.email = email;
-            this.vendas = vendas;
         }
 
     public Long getId() {
