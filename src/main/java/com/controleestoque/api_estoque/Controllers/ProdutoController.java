@@ -52,7 +52,7 @@ public class ProdutoController {
         /*2. Gerenciamento do N:M (Fornecedores)
          * Busca todos os fornecedeores pelo ID fornecido
         */
-        if(produto.getFornecedores() != null && produto.getFornecedores().isEmpty()) {
+        if(produto.getFornecedores() != null && !produto.getFornecedores().isEmpty()) {
             //cria um Set para armazenar os fornecedores gerenciados
             produto.getFornecedores().clear();
             

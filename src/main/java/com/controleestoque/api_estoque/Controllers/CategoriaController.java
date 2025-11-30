@@ -23,7 +23,7 @@ public class CategoriaController {
     }
 
     // GET da /api/categorias/{id}
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long id) {
         // Busca a categoria pelo ID. usa orElse para retornar 404 caso não encontre
         return categoriaRepository.findById(id)
@@ -40,7 +40,7 @@ public class CategoriaController {
     }
 
     //PUT /api/categorias
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Categoria> updateCategoria(@PathVariable Long id, @RequestBody Categoria categoriaDetails) {
         //tenta encontrar categoria existente
         return categoriaRepository.findById(id).map(categoria -> {
