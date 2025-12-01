@@ -23,7 +23,7 @@ git clone https://github.com/Breno-V/ControleEstoque-20240207
 O Xampp será uma ferramenta útil e necessária para conseguir sincronizar minha aplicação com o MySQL, que é o banco de dados que eu utilizo.
 Logo a seguir, disponibilizo um vídeo rápido de tutorial para conseguir instalar corretamente o xampp:
 [Como instalar o Xampp no Windows 11](https://youtu.be/9LhQfvqc09M?si=E0luczGI0Ob_8KwA)
-> Caso esteja usando Linux, recomendo pesquisar algum outro tutorial de acordo com sua distro. Além disso, pode utilizar de outro serviço fora o xampp, contanto que tenha MySQL disponível
+> Caso esteja usando Linux, recomendo pesquisar algum outro tutorial de acordo com sua distro. Além disso, pode utilizar de outro serviço fora o Xampp, contanto que tenha MySQL disponível
 
 **Após a instalação do Xampp, aperte em *Start* no Apache e no MySQL**
 
@@ -54,7 +54,7 @@ Exemplo no **Linux**:
 #### 2. Verifique se o Maven foi instalado corretamente
 No terminal, digite:
 ```
-mvn --v
+mvn -version
 ```
 Se aparecer algo como:
 ```
@@ -260,7 +260,7 @@ Com o [Insomnia](https://insomnia.rest/download) ou o [Postman](https://www.post
 #### Excluindo Cliente
 **EndPoint:** ```http://localhost:8080/api/clientes/IDDOCLIENTE```<br>
 
-#### Excluindo Fornecedore
+#### Excluindo Fornecedor
 **EndPoint:** ```http://localhost:8080/api/fornecedores```<br>
 
 #### Excluindo Categoria
