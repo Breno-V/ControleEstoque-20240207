@@ -1,5 +1,7 @@
 package com.controleestoque.api_estoque.Controllers;
 
+import java.math.BigDecimal;
+
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,10 +56,22 @@ public class VendaController {
             produto.setEstoque(estoque);
             produtoRepository.save(produto);
 
+            //Associar produto ao item da venda
+            item.setProduto(produto);
+
             //define preço unitário
             item.setPrecoUnitario(produto.getPreco());
         }
 
+        //Calcular valor total da venda
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (ItemVenda item : venda.getItens()) {
+            BigDecimal subtotal = item.getPrecoUnitario().multiply(BigDecimal.valueOf(item.getQuantidade()));
+            total = total.add(subtotal);
+        }
+
+        venda.setValorTotal(total);
         //Salvar venda
         Venda novaVenda = vendaRepository.save(venda);
 
@@ -67,6 +81,7 @@ public class VendaController {
             itemVendaRepository.save(item);
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaVenda);
+        //aqui, buscamos a venda completa já com os itens salvos para retornar na resposta
+        return ResponseEntity.status(HttpStatus.CREATED).body(vendaRepository.findById(novaVenda.getId()).get());
     }
 }

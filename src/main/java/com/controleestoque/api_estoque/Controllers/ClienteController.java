@@ -41,6 +41,8 @@ public class ClienteController {
     public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente clienteDetails){
         return clienteRepository.findById(id).map(cliente -> {
             cliente.setNome(clienteDetails.getNome());
+            cliente.setEmail(clienteDetails.getEmail());
+            cliente.setTelefone(clienteDetails.getTelefone());
             Cliente updatedCliente = clienteRepository.save(cliente);
             return ResponseEntity.ok(updatedCliente);
         })

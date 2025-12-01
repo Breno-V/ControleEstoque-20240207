@@ -3,6 +3,8 @@ package com.controleestoque.api_estoque.Entitys;
 import jakarta.persistence.*;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "tb_fornecedores")
 
@@ -18,6 +20,7 @@ public class Fornecedor {
     //'mappedBy' indica que o mapeamento da tabela de junção está na classe Produto
     
     @ManyToMany(mappedBy = "fornecedores")
+    @JsonIgnoreProperties("fornecedores")
     private Set<Produto> produtos;
 
     public Fornecedor() {}

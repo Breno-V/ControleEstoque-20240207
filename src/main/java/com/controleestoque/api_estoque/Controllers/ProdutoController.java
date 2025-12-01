@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.controleestoque.api_estoque.Repositories.CategoriaRepository;
 import com.controleestoque.api_estoque.Repositories.FornecedorRepository;
+import com.controleestoque.api_estoque.Repositories.ItemVendaRepository;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -20,6 +21,7 @@ public class ProdutoController {
     private final ProdutoRepository produtoRepository;
     private final FornecedorRepository fornecedorRepository;
     private final CategoriaRepository categoriaRepository;
+    private final ItemVendaRepository itemVendaRepository;
     // Estoque normalmente é manipulado via Produto ou separadamente
 
     @GetMapping
@@ -52,16 +54,17 @@ public class ProdutoController {
         /*2. Gerenciamento do N:M (Fornecedores)
          * Busca todos os fornecedeores pelo ID fornecido
         */
-        if(produto.getFornecedores() != null && !produto.getFornecedores().isEmpty()) {
-            //cria um Set para armazenar os fornecedores gerenciados
-            produto.getFornecedores().clear();
-            
-            //Aqui ou em um projeto real. você buscaria Fornecedores um por um ou usando o método customizado do repositório
-            //Exemplo simplificado:
-            produto.getFornecedores().forEach(fornecedor -> {
-                fornecedorRepository.findById(fornecedor.getId()).ifPresent(produto.getFornecedores()::add); //Adiciona o fornecedor gerenciado
-            });
+        if (produto.getFornecedores() != null) {
+        var fornecedoresOriginais = produto.getFornecedores(); // pega os fornecedores do request
+        produto.getFornecedores().clear(); // limpa o Set do fornecedores do produto para evitar duplicatas
+
+        for (var fornecedorReq : fornecedoresOriginais) {
+            if (fornecedorReq != null && fornecedorReq.getId() != null) {
+                fornecedorRepository.findById(fornecedorReq.getId())
+                        .ifPresent(produto.getFornecedores()::add);
+            }
         }
+    }
 
         // 3. Gerenciamento do Estoque (1:1)
         if (produto.getEstoque() != null) {
@@ -78,7 +81,32 @@ public class ProdutoController {
     @PutMapping("/{id}")
     public ResponseEntity<Produto> updateProduto(@PathVariable Long id, @RequestBody Produto produtoDetails) {
         return produtoRepository.findById(id).map(produto -> {
+            // Atualiza os campos necessários
+            //Nome e preço
             produto.setNome(produtoDetails.getNome());
+            produto.setPreco(produtoDetails.getPreco());
+
+            //Categoria
+            //se for fornecida uma categoria válida, atualiza a associação 
+            if (produtoDetails.getCategoria() != null && produtoDetails.getCategoria().getId() != null) {
+                categoriaRepository.findById(produtoDetails.getCategoria().getId()).ifPresent(produto::setCategoria);
+            }
+
+            //fornecedores
+            if (produtoDetails.getFornecedores() != null) {
+                produto.getFornecedores().clear();
+                //aqui, buscamos e associamos cada fornecedor fornecido ao produto atualizado
+                for (var fornecedorReq : produtoDetails.getFornecedores()) {
+                    if (fornecedorReq != null && fornecedorReq.getId() != null) {
+                        fornecedorRepository.findById(fornecedorReq.getId()).ifPresent(produto.getFornecedores()::add);
+                    }
+                }
+            }   
+
+            //Estoque
+            if (produtoDetails.getEstoque() != null) {
+                produto.getEstoque().setQuantidade(produtoDetails.getEstoque().getQuantidade());
+            }
             Produto updatedProduto = produtoRepository.save(produto);
             return ResponseEntity.ok(updatedProduto);
         }).orElse(ResponseEntity.notFound().build());
@@ -87,10 +115,20 @@ public class ProdutoController {
     //DELETE /api/produtos
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduto(@PathVariable Long id) {
+
         return produtoRepository.findById(id).map(produto -> {
-            produto.setAtivo(false);
-            produtoRepository.save(produto);
-            return ResponseEntity.noContent().build();
+            boolean isProdutoSold = itemVendaRepository.existsByProdutoId(id);
+
+            if(isProdutoSold) {
+                //Se o produto já foi vendido, não o excluímos fisicamente, apenas marcamos como inativo
+                produto.setAtivo(false);
+                produtoRepository.save(produto);
+                return ResponseEntity.noContent().build();
+            } else {
+                //Se o produto nunca foi vendido, podemos excluí-lo fisicamente
+                produtoRepository.delete(produto);
+                return ResponseEntity.noContent().build();
+            }
         })
         .orElse(ResponseEntity.notFound().build());
     }
