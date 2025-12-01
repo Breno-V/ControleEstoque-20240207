@@ -86,11 +86,12 @@ public class ProdutoController {
 
     //DELETE /api/produtos
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduto(@PathVariable Long id) {
-        if(!produtoRepository.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-        produtoRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteProduto(@PathVariable Long id) {
+        return produtoRepository.findById(id).map(produto -> {
+            produto.setAtivo(false);
+            produtoRepository.save(produto);
+            return ResponseEntity.noContent().build();
+        })
+        .orElse(ResponseEntity.notFound().build());
     }
 }

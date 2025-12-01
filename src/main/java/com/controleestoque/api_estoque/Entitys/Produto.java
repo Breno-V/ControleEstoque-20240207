@@ -19,6 +19,7 @@ public class Produto {
     private Long id; //chave primária
     private String nome;
     private BigDecimal preco;
+    private boolean ativo = true;
 
     //Relacionamento 1:1 (um-para-um)//
     //Mapeamento: Um produto tem UM registro de estoque (e vice-versa)
@@ -105,5 +106,13 @@ public class Produto {
 
     public void setFornecedores(Set<Fornecedor> fornecedores) {
         this.fornecedores = fornecedores;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }}
 
