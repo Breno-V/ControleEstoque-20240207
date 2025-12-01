@@ -29,7 +29,7 @@ Logo a seguir, disponibilizo um vídeo rápido de tutorial para conseguir instal
 
 ---
 ### 4. Executando o Projeto
-Para quem utiliza o **VS Code**, siga esses passos:
+### 4.1 Para quem utiliza o **VS Code**, siga esses passos:
 #### 1. Baixe as extensões necessárias
 Para facilitar a execução e compilação do código, a Microsoft disponibilizou um pacote de extensões exclusivo para aplicações Java, apelidado de **Extension Pack for Java** que contém as seguintes extensões:
 - Language Support for Java (Red Hat)
@@ -44,6 +44,7 @@ O último passo é apenas entrar dentro do arquivo **ApiEstoqueApplication.java*
 
 ---
 Para quem utiliza algum outro editor de texto, é necessário a instalação do Maven. ([Como instalar o Maven](https://youtu.be/rfhTnfbBQcY?si=0l0eQGPCHhNUQK6z)) <br>Após a instalação, siga estes passos:
+### 4.2 Utilizando Maven
 #### 1. Adentre-se na pasta raiz do projeto
 Abra um terminal dentro da pasta do projeto — é a mesma pasta onde está localizado o arquivo `pom.xml`.<br><br>
 Exemplo no **Windows**:
