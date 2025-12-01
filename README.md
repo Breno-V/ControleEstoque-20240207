@@ -102,3 +102,169 @@ java -jar controle-estoque-0.0.1-SNAPSHOT.jar
 ```
 **Pronto** — sua API estará rodando da mesma forma:
 ---
+
+### 5. Testando a Aplicação (ENDPOINTS)
+Com o [Insomnia](https://insomnia.rest/download) ou o [Postman](https://www.postman.com/downloads/) instalados (Ou com Postman na extensão do VS Code), agora é possível criar clientes, produtos, fornecedores; realizar vendas; alterar dados e excluir clientes, fornecedores e produtos.
+
+---
+### POST/Criar
+
+#### Criando um Cliente:
+**EndPoint:** ```http://localhost:8080/api/clientes```<br>
+**Template de JSON:**
+```json
+{
+	"nome":"João",
+	"email":"emailDoJoão@gmail.com",
+	"telefone":"18982230123"
+}
+```
+
+#### Criando um Fornecedor:
+**EndPoint:** ```http://localhost:8080/api/fornecedores```<br>
+**Template de JSON:**
+```json
+{
+	"nome":"Maria"
+}
+```
+
+#### Criando uma Categoria:
+**EndPoint:** ```http://localhost:8080/api/categorias```<br>
+**Template de JSON:**
+```json
+{
+	"nome":"Frutas"
+}
+```
+
+#### Criando um Produto:
+**EndPoint:** ```http://localhost:8080/api/produtos```<br>
+**Template de JSON:**
+```json
+{
+	"nome": "Banana",
+	"preco": 5.98,
+	"categoria": {
+	"id": 1 //Ou o Id correspondente a categoria desejada
+	},
+	"fornecedores": [
+	{ "id": 1 } //Ou o Id correspondente ao/a fornecedor(a) desejada
+	],
+	"estoque": {
+	"quantidade": 5
+	}
+}
+```
+
+#### Realizando uma venda
+**EndPoint:**```http://localhost:8080/api/vendas```<br>
+**Template de JSON:**
+```json
+{
+  "cliente": {
+    "id": 1
+  },
+  "itens": [
+    {
+      "produto": {
+        "id": 1
+      },
+      "quantidade": 2
+    }    
+  ]
+}
+```
+---
+### GET/Buscar
+
+#### Buscando Cliente:
+1. Todos os clientes<br>
+**EndPoint:** ```http://localhost:8080/api/clientes```<br>
+2. Buscando clientes por ID<br>
+**EndPoint:** ```http://localhost:8080/api/clientes/IDDOCLIENTE```<br>
+
+#### Buscando Fornecedores:
+1. Todos os fornecedores<br>
+**EndPoint:** ```http://localhost:8080/api/fornecedores```<br>
+2. Buscando fornecedores por ID<br>
+**EndPoint:** ```http://localhost:8080/api/fornecedores/IDDOFORNECEDOR```<br>
+
+#### Buscando Categorias
+1. Todos as categorias<br>
+**EndPoint:** ```http://localhost:8080/api/categorias```<br>
+2. Buscando categorias por ID<br>
+**EndPoint:** ```http://localhost:8080/api/categorias/IDDACATEGORIA```<br>
+
+#### Buscando Produtos
+1. Todos os produtos<br>
+**EndPoint:** ```http://localhost:8080/api/produtos```<br>
+2. Buscando produtos por ID<br>
+**EndPoint:** ```http://localhost:8080/api/produtos/IDDOPRODUTO```<br>
+
+---
+### PUT/Atualizar
+
+#### Atualizando Cliente:
+**EndPoint:** ```http://localhost:8080/api/clientes/IDDOCLIENTE```<br>
+**Template de JSON:**
+```json
+{
+	"nome":"João Silva",
+	"email":"outroEmailDoJoao@gmail.com",
+	"telefone":1180712345
+}
+```
+
+#### Atualizando Fornecedor:
+**EndPoint:** ```http://localhost:8080/api/fornecedores/IDDOFORNECEDOR```<br>
+**Template de JSON:**
+```json
+{
+	"nome":"José"
+}
+```
+
+#### Atualizando Categoria:
+**EndPoint:** ```http://localhost:8080/api/categorias/IDDACATEGORIA```<br>
+**Template de JSON:**
+```json
+{
+	"nome":"Eletrônico"
+}
+```
+
+#### Atualizando um Produto:
+**EndPoint:** ```http://localhost:8080/api/produtos/IDDOPRODUTO```<br>
+**Template de JSON:**
+```json
+{
+	"nome": "Melancia",
+	"preco": 15.78,
+	"categoria": {
+	"id": 3 //Ou o Id correspondente a categoria desejada
+	},
+	"fornecedores": [
+	{ "id": 1 },
+ { "id": 2 } //Ou o Id correspondente ao/a fornecedor(a) desejada
+	],
+	"estoque": {
+	"quantidade": 15
+	}
+}
+```
+
+---
+### DELETE/Excluindo
+
+#### Excluindo Cliente
+**EndPoint:** ```http://localhost:8080/api/clientes/IDDOCLIENTE```<br>
+
+#### Excluindo Fornecedore
+**EndPoint:** ```http://localhost:8080/api/fornecedores```<br>
+
+#### Excluindo Categoria
+**EndPoint:** ```http://localhost:8080/api/categorias/IDDACATEGORIA```<br>
+
+#### Excluindo Produto
+**EndPoint:** ```http://localhost:8080/api/produtos/IDDOPRODUTO```<br>
