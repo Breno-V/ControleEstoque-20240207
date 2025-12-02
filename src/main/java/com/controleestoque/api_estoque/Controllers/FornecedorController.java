@@ -48,11 +48,22 @@ public class FornecedorController {
 
     //DELETE /api/fornecedor/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFornecedor(@PathVariable Long id){
-        if(!fornecedorRepository.existsById(id)){
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> deleteFornecedor(@PathVariable Long id){
+        return fornecedorRepository.findById(id).map(fornecedor -> {
+
+        boolean hasProducts = fornecedor.getProdutos() != null && !fornecedor.getProdutos().isEmpty();
+
+        if (hasProducts) {
+            // Tem produtos → marcar como inativo
+            fornecedor.setAtivo(false);
+            fornecedorRepository.save(fornecedor);
+        } else {
+            // Não tem produtos → excluir definitivamente
+            fornecedorRepository.delete(fornecedor);
         }
-        fornecedorRepository.deleteById(id);
+
         return ResponseEntity.noContent().build();
+
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

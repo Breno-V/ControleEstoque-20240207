@@ -25,6 +25,8 @@ public class Fornecedor {
     @JsonIgnore
     private Set<Produto> produtos = new HashSet<>();
 
+    private boolean ativo = true;
+
     public Fornecedor() {}
 
     public Fornecedor(String nome, Set<Produto> produtos) {
@@ -66,5 +68,12 @@ public class Fornecedor {
         produto.getFornecedores().remove(this);
     }
 
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
     
 } 
