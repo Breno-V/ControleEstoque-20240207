@@ -262,7 +262,7 @@ Com o [Insomnia](https://insomnia.rest/download) ou o [Postman](https://www.post
 **EndPoint:** ```http://localhost:8080/api/clientes/IDDOCLIENTE```<br>
 
 #### Excluindo Fornecedor
-**EndPoint:** ```http://localhost:8080/api/fornecedores```<br>
+**EndPoint:** ```http://localhost:8080/api/fornecedores/IDDOFORNECEDOR```<br>
 
 #### Excluindo Categoria
 **EndPoint:** ```http://localhost:8080/api/categorias/IDDACATEGORIA```<br>
