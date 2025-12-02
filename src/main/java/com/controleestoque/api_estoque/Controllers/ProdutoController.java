@@ -1,10 +1,13 @@
 package com.controleestoque.api_estoque.Controllers;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import com.controleestoque.api_estoque.Entitys.Fornecedor;
 import com.controleestoque.api_estoque.Entitys.Produto;
 import com.controleestoque.api_estoque.Repositories.ProdutoRepository;
 
@@ -54,22 +57,20 @@ public class ProdutoController {
         /*2. Gerenciamento do N:M (Fornecedores)
          * Busca todos os fornecedeores pelo ID fornecido
         */
+       // aqui criamos um novo conjunto para armazenar os fornecedores adicionados
+        Set<Fornecedor> fornecedoresAdicionados = new HashSet<>();
         if (produto.getFornecedores() != null && !produto.getFornecedores().isEmpty()) {
-        var fornecedoresOriginais = produto.getFornecedores(); // pega os fornecedores do request
-        produto.getFornecedores().clear(); // limpa o Set do fornecedores do produto para evitar duplicatas
-
-        for (var fornecedorReq : fornecedoresOriginais) {
-            if (fornecedorReq != null && fornecedorReq.getId() != null) {
-                fornecedorRepository.findById(fornecedorReq.getId())
-                        .ifPresent(fornecedorGerenciado -> {
-                            produto.getFornecedores().add(fornecedorGerenciado);
-                            if(fornecedorGerenciado.getProdutos() != null) {
-                                fornecedorGerenciado.getProdutos().add(produto); // garante a consistência bidirecional
-                            }
-                        });
+            //para cada fornecedor no produto recebido, buscamos o fornecedor gerenciado pelo ID
+            for (Fornecedor fornecedorReq : produto.getFornecedores()) {
+                if (fornecedorReq != null && fornecedorReq.getId() != null) {
+                    fornecedorRepository.findById(fornecedorReq.getId())
+                    //se existir, adiciona ao conjunto de fornecedores Adicionados
+                        .ifPresent(fornecedoresAdicionados::add);
+                }
             }
         }
-    }
+        // finalmente, associamos o conjunto de fornecedores gerenciados ao produto
+        produto.setFornecedores(fornecedoresAdicionados);
 
         // 3. Gerenciamento do Estoque (1:1)
         if (produto.getEstoque() != null) {
@@ -78,6 +79,12 @@ public class ProdutoController {
 
         //4. Salva o produto
         Produto savedProduto = produtoRepository.save(produto);
+
+        //5. Atualiza o lado inverso do relacionamento N:M
+        for (Fornecedor f : savedProduto.getFornecedores()) {
+            f.getProdutos().add(savedProduto);
+            fornecedorRepository.save(f); // garante persistência da associação
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduto);
     }
@@ -98,37 +105,32 @@ public class ProdutoController {
             }
 
             //fornecedores
-            if (produtoDetails.getFornecedores() != null) {
-                // Remove o produto dos fornecedores antigos
-                if(produto.getFornecedores() != null) {
-                    produto.getFornecedores().forEach(f -> {
-                        if(f.getProdutos() != null) {
-                            f.getProdutos().remove(produto);
-                        }
-                    });
-                }
-            }  
-            
-            produto.getFornecedores().clear();
 
+            if(produto.getFornecedores() != null) {
+                produto.getFornecedores().forEach(f -> f.removeProduto(produto));
+                produto.getFornecedores().clear();
+            }
+    
             for (var fornecedorReq : produtoDetails.getFornecedores()) {
                 if (fornecedorReq != null && fornecedorReq.getId() != null) {
-                    fornecedorRepository.findById(fornecedorReq.getId())
-                            .ifPresent(fornecedorGerenciado -> {
-                                produto.getFornecedores().add(fornecedorGerenciado);
-                                if(fornecedorGerenciado.getProdutos() != null) {
-                                        fornecedorGerenciado.getProdutos().add(produto);
-                                }
+                    fornecedorRepository.findById(fornecedorReq.getId()).ifPresent(fornecedorGerenciado -> {
+                        fornecedorGerenciado.addProduto(produto);
                     });
-                } 
-            }      
+                }
+            }     
 
             //Estoque
             if (produtoDetails.getEstoque() != null) {
                 produto.getEstoque().setQuantidade(produtoDetails.getEstoque().getQuantidade());
             }
+
             Produto updatedProduto = produtoRepository.save(produto);
+
+            for (Fornecedor f : produto.getFornecedores()) {
+                fornecedorRepository.save(f); // garante que o relacionamento N:M seja persistido
+            }
             return ResponseEntity.ok(updatedProduto);
+
         }).orElse(ResponseEntity.notFound().build());
     }
 

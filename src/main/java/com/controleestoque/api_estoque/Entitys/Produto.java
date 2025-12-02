@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -48,7 +47,6 @@ public class Produto {
         joinColumns = @JoinColumn(name = "produto_id"), // FK desta entidade na tabela de junção
         inverseJoinColumns = @JoinColumn(name = "fornecedor_id") //FK da outra entidade
     )
-    @JsonIgnoreProperties("produtos")
     private Set<Fornecedor> fornecedores = new HashSet<>();
 
     //Construtores, Getters e setters

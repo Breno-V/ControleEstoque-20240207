@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_fornecedores")
@@ -21,8 +21,8 @@ public class Fornecedor {
     //Mapeamento: lado inverso do relacionamento em produto
     //'mappedBy' indica que o mapeamento da tabela de junção está na classe Produto
     
-    @ManyToMany(mappedBy = "fornecedores", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("fornecedores")
+    @ManyToMany(mappedBy = "fornecedores", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Produto> produtos = new HashSet<>();
 
     public Fornecedor() {}
@@ -56,7 +56,15 @@ public class Fornecedor {
         this.produtos = produtos;
     }
 
-    //Construtores, getters e setters
+    public void addProduto(Produto produto) {
+        this.produtos.add(produto);
+        produto.getFornecedores().add(this);
+    }
+
+    public void removeProduto(Produto produto) {
+        this.produtos.remove(produto);
+        produto.getFornecedores().remove(this);
+    }
 
     
 } 
