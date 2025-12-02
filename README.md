@@ -5,6 +5,7 @@ O **Objetivo** desse projeto foi **aprimorar minha habilidade** com a linguagem 
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" width="100"/><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" width="90"/>
 ## 🎬	Demonstração
 ---
+[![Video Demonstrativo!](https://img.youtube.com/vi/jIYIZjkdquU/0.jpg)](https://www.youtube.com/watch?v=jIYIZjkdquU)
 
 ---
 ## 📌	Como testar a API
