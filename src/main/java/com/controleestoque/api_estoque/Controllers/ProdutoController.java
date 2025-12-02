@@ -54,14 +54,19 @@ public class ProdutoController {
         /*2. Gerenciamento do N:M (Fornecedores)
          * Busca todos os fornecedeores pelo ID fornecido
         */
-        if (produto.getFornecedores() != null) {
+        if (produto.getFornecedores() != null && !produto.getFornecedores().isEmpty()) {
         var fornecedoresOriginais = produto.getFornecedores(); // pega os fornecedores do request
         produto.getFornecedores().clear(); // limpa o Set do fornecedores do produto para evitar duplicatas
 
         for (var fornecedorReq : fornecedoresOriginais) {
             if (fornecedorReq != null && fornecedorReq.getId() != null) {
                 fornecedorRepository.findById(fornecedorReq.getId())
-                        .ifPresent(produto.getFornecedores()::add);
+                        .ifPresent(fornecedorGerenciado -> {
+                            produto.getFornecedores().add(fornecedorGerenciado);
+                            if(fornecedorGerenciado.getProdutos() != null) {
+                                fornecedorGerenciado.getProdutos().add(produto); // garante a consistência bidirecional
+                            }
+                        });
             }
         }
     }
@@ -94,14 +99,29 @@ public class ProdutoController {
 
             //fornecedores
             if (produtoDetails.getFornecedores() != null) {
-                produto.getFornecedores().clear();
-                //aqui, buscamos e associamos cada fornecedor fornecido ao produto atualizado
-                for (var fornecedorReq : produtoDetails.getFornecedores()) {
-                    if (fornecedorReq != null && fornecedorReq.getId() != null) {
-                        fornecedorRepository.findById(fornecedorReq.getId()).ifPresent(produto.getFornecedores()::add);
-                    }
+                // Remove o produto dos fornecedores antigos
+                if(produto.getFornecedores() != null) {
+                    produto.getFornecedores().forEach(f -> {
+                        if(f.getProdutos() != null) {
+                            f.getProdutos().remove(produto);
+                        }
+                    });
                 }
-            }   
+            }  
+            
+            produto.getFornecedores().clear();
+
+            for (var fornecedorReq : produtoDetails.getFornecedores()) {
+                if (fornecedorReq != null && fornecedorReq.getId() != null) {
+                    fornecedorRepository.findById(fornecedorReq.getId())
+                            .ifPresent(fornecedorGerenciado -> {
+                                produto.getFornecedores().add(fornecedorGerenciado);
+                                if(fornecedorGerenciado.getProdutos() != null) {
+                                        fornecedorGerenciado.getProdutos().add(produto);
+                                }
+                    });
+                } 
+            }      
 
             //Estoque
             if (produtoDetails.getEstoque() != null) {

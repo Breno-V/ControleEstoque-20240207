@@ -1,6 +1,8 @@
 package com.controleestoque.api_estoque.Entitys;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,9 +21,9 @@ public class Fornecedor {
     //Mapeamento: lado inverso do relacionamento em produto
     //'mappedBy' indica que o mapeamento da tabela de junção está na classe Produto
     
-    @ManyToMany(mappedBy = "fornecedores")
+    @ManyToMany(mappedBy = "fornecedores", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("fornecedores")
-    private Set<Produto> produtos;
+    private Set<Produto> produtos = new HashSet<>();
 
     public Fornecedor() {}
 

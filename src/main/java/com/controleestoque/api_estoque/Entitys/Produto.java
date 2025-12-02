@@ -1,6 +1,7 @@
 package com.controleestoque.api_estoque.Entitys;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -41,14 +42,14 @@ public class Produto {
     //Relacionamento N:M (Muito-para-Muito)//
     //Mapeamento: Muitos produtos têm MUITOS fornceedores (e vice-versa).
     //define a tabela intermediária 'tb_produto_fornecedor' e as colunas da união
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "tb_produto_fornecedor", //nome da tabela de junção
         joinColumns = @JoinColumn(name = "produto_id"), // FK desta entidade na tabela de junção
         inverseJoinColumns = @JoinColumn(name = "fornecedor_id") //FK da outra entidade
     )
     @JsonIgnoreProperties("produtos")
-    private Set<Fornecedor> fornecedores;
+    private Set<Fornecedor> fornecedores = new HashSet<>();
 
     //Construtores, Getters e setters
     public Produto(){}
